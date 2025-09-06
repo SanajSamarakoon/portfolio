@@ -18,6 +18,49 @@
 </head>
 
 <body>
+    <!-- Navigation Bar -->
+     <nav class="navbar navbar-expand-lg shadow-sm py-3"> 
+        <div class="container">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="bi bi-gem me-2" style="color: #0ce16f; font-size: 2.0rem;"></i>
+                <span class="text-primary fw-bold">Sanaj's Portfolio</span>
+            </a>
+
+            <!-- Mobile toggle button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('projects') }}">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Contact</a>
+                    </li>
+
+        </div>
+     </nav>
+     <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
     <main class="container">
         {% block content %}{% endblock %}
     </main>
