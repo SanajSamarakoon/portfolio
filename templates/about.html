@@ -2,7 +2,44 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1> Welcome to My Portfolio!</h1>
-    <p> This is my about page.</p>
+    <h1 class="text-center mb-5">My Journey</h1>
+    <!-- Timeline Section -->
+     <div class="timeline">
+        {% for event in timeline %}
+        <div class="timeline-item {% if loop.index is even %}right{% else %}left{% endif %}">
+            <!-- Timeline Icons -->
+            <div class="timeline-icon">
+                {% if "Academic" in event.type %}
+                    <i class="bi bi-mortarboard"></i>
+                {% elif "Project" in event.type %}
+                    <i class="bi bi-lightbulb"></i>
+                {% elif "Client Project" in event.type %}
+                    <i class="bi bi-briefcase"></i>
+                {% elif "Work Experience" in event.type %}
+                    <i class="bi bi-person-workspace"></i>
+                {% else %}
+                    <i class="bi bi-question-octagon-fill"></i>
+                {% endif %}
+            </div>
+            <!-- Timeline Content -->
+            <div class="timeline-content card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-tile">{{ event.id }} - {{ event.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        {% if event.date1 == event.date2 %}
+                            {{ event.date1 }}
+                        {% else %}
+                            {{ event.date1 }} - {{ event.date2 }}
+                        {% endif %}
+                    </h6>
+                    <p class="card-text">{{ event.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- End of Timeline Section -->
+
+<p> This is my about page.</p>
 </div>
 {% endblock %}
