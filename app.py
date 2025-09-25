@@ -128,14 +128,6 @@ def contact():
         return redirect(url_for('index'))
     
     return render_template('contact.html') # If GET request, just render the form
-    
-    # Here you would typically handle the form submission, e.g., save to a database or send an email
-    # For testing only a print statement is used
-    print(f"📩 New contact submission: {name}, {email}, {message}")
-    
-    flash("Thanks for reaching out! Your message has been received.")
-
-    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
