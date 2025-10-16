@@ -1,45 +1,163 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center mb-5">My Journey</h1>
-    <!-- Timeline Section -->
-     <div class="timeline">
-        {% for event in timeline %}
-        <div class="timeline-item {% if loop.index is even %}right{% else %}left{% endif %}">
-            <!-- Timeline Icons -->
-            <div class="timeline-icon">
-                {% if "Academic" in event.type %}
-                    <i class="bi bi-mortarboard"></i>
-                {% elif "Project" in event.type %}
-                    <i class="bi bi-lightbulb"></i>
-                {% elif "Client Project" in event.type %}
-                    <i class="bi bi-briefcase"></i>
-                {% elif "Work Experience" in event.type %}
-                    <i class="bi bi-person-workspace"></i>
-                {% else %}
-                    <i class="bi bi-question-octagon-fill"></i>
-                {% endif %}
-            </div>
-            <!-- Timeline Content -->
-            <div class="timeline-content card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">{{ event.id }} - {{ event.title }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">
-                        {% if event.date1 == event.date2 %}
-                            {{ event.date1 }}
-                        {% else %}
-                            {{ event.date1 }} - {{ event.date2 }}
-                        {% endif %}
-                    </h6>
-                    <p class="card-text">{{ event.description }}</p>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <!-- End of Timeline Section -->
+<h1 class="text-center mb-5">My Journey</h1>
 
-<p> This is my about page.</p>
+<section id="about-intro" class="mb-5">
+  <div class="container">
+    <p>
+      Welcome to the heart of my journey. This isn’t the usual “here’s my career in bullet points” page — 
+      if you want the formal stuff, my 
+      <a href="/static/docs/Curriculum_vitae_V4 (12.08.2025).pdf" target="_blank">CV</a> 
+      and <a href="/static/docs/Resume_V2 (12.08.2025).pdf" target="_blank">resume</a> 
+      are just a click away.
+    </p>
+
+    <p>Here, you’ll find an interactive timeline that tells the story of my path as a software engineer.</p>
+
+    <p>
+      I started as a <strong>Physics major</strong>, became an <strong>entrepreneur out of necessity</strong> in our family business, 
+      and now I’m charting a course into <strong>uncharted waters: software engineering</strong>.
+    </p>
+
+    <p>
+      I don’t come from a traditional Computer Science background. Think of this timeline as a 
+      <em>map of an unscripted adventure</em> — a few detours, some steep climbs, but plenty of action, 
+      problem-solving, and moments of discovery along the way.
+    </p>
+  </div>
+</section>
+
+<!-- ===== Filter Form ===== -->
+<div class="container mb-4">
+  <form method="get" action="{{ url_for('about') }}" class="row g-3 align-items-end">
+    <div class="col-md-3">
+      <label for="category" class="form-label">Category</label>
+      <select name="category" id="category" class="form-select">
+        <option value="">All</option>
+        <option value="Academic" {% if request.args.get('category') == 'Academic' %}selected{% endif %}>Academic</option>
+        <option value="Project" {% if request.args.get('category') == 'Project' %}selected{% endif %}>Project</option>
+        <option value="Client Project" {% if request.args.get('category') == 'Client Project' %}selected{% endif %}>Client Project</option>
+        <option value="Work Experience" {% if request.args.get('category') == 'Work Experience' %}selected{% endif %}>Work Experience</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="start_date" class="form-label">Start Date</label>
+      <input type="month" id="start_date" name="start_date" class="form-control" value="{{ request.args.get('start_date', '') }}">
+    </div>
+
+    <div class="col-md-3">
+      <label for="end_date" class="form-label">End Date</label>
+      <input type="month" id="end_date" name="end_date" class="form-control" value="{{ request.args.get('end_date', '') }}">
+    </div>
+
+    <div class="col-md-3 d-flex">
+      <button type="submit" class="btn btn-primary flex-fill">Filter</button>
+      <a href="{{ url_for('about') }}" class="btn btn-secondary ms-2 flex-fill">Reset</a>
+    </div>
+  </form>
+</div>
+
+<!-- ===== Timeline Section ===== -->
+<div class="container position-relative">
+  <div class="timeline-line position-absolute top-0 start-50 translate-middle-x h-100"></div>
+
+  {% for event in timeline %}
+  <div class="row mb-5 align-items-stretch timeline-item">
+    {% if loop.index0 % 2 == 0 %}
+    <!-- Text Left -->
+    <div class="col-lg-5 d-flex flex-column justify-content-center text-end pe-lg-3">
+      <div class="card p-3 shadow-sm h-100">
+        <h5 class="card-title">{{ event.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          {{ event.start_date.strftime('%B %Y') }} — {{ event.end_date.strftime('%B %Y') }}
+        </h6>
+        <p class="card-text">{{ event.description }}</p>
+      </div>
+    </div>
+
+    <!-- Icon Center -->
+    <div class="col-lg-2 d-flex align-items-center justify-content-center">
+      <div class="timeline-icon bg-white border border-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto">
+        {% if event.category == "Academic" %}
+          <i class="bi bi-mortarboard"></i>
+        {% elif event.category == "Project" %}
+          <i class="bi bi-lightbulb"></i>
+        {% elif event.category == "Client Project" %}
+          <i class="bi bi-briefcase"></i>
+        {% elif event.category == "Work Experience" %}
+          <i class="bi bi-person-workspace"></i>
+        {% else %}
+          <i class="bi bi-question-octagon-fill"></i>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Image Right -->
+    <div class="col-lg-5 d-flex flex-column align-items-stretch position-relative text-center text-lg-start ps-lg-3 pe-lg-3">
+      {% if event.image_path %}
+      <div class="position-relative w-100">
+        <img src="{{ url_for('static', filename=event.image_path) }}" class="img-fluid rounded shadow-sm" alt="{{ event.title }}"> 
+      
+        {% if event.tech_stack %}
+        <div class="position-absolute bottom-0 start-0 mb-2 ms-2 d-flex flex-wrap">
+          {% for tech in event.tech_stack %}
+          <span class="badge bg-primary me-1 mb-1">{{ tech }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% else %}
+    <!-- Image Left -->
+    <div class="col-lg-5 d-flex flex-column align-items-stretch position-relative text-center text-lg-start ps-lg-3 pe-lg-3">
+      {% if event.image_path %}
+      <div class="position-relative w-100">
+        <img src="{{ url_for('static', filename=event.image_path) }}" class="img-fluid rounded shadow-sm" alt="{{ event.title }}"> 
+      
+        {% if event.tech_stack %}
+        <div class="position-absolute bottom-0 start-0 mb-2 ms-2 d-flex flex-wrap">
+          {% for tech in event.tech_stack %}
+          <span class="badge bg-primary me-1 mb-1">{{ tech }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Icon Center -->
+    <div class="col-lg-2 d-flex align-items-center justify-content-center">
+      <div class="timeline-icon bg-white border border-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto">
+        {% if event.category == "Academic" %}
+          <i class="bi bi-mortarboard"></i>
+        {% elif event.category == "Project" %}
+          <i class="bi bi-lightbulb"></i>
+        {% elif event.category == "Client Project" %}
+          <i class="bi bi-briefcase"></i>
+        {% elif event.category == "Work Experience" %}
+          <i class="bi bi-person-workspace"></i>
+        {% else %}
+          <i class="bi bi-question-octagon-fill"></i>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Text Right -->
+    <div class="col-lg-5 d-flex flex-column justify-content-center text-start ps-lg-3">
+      <div class="card p-3 shadow-sm h-100">
+        <h5 class="card-title">{{ event.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          {{ event.start_date.strftime('%B %Y') }} — {{ event.end_date.strftime('%B %Y') }}
+        </h6>
+        <p class="card-text">{{ event.description }}</p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

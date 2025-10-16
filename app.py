@@ -1,55 +1,21 @@
 # Main Application File
-
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
+from models import db, TimelineEvent
 
 app = Flask(__name__)
 app.secret_key = "supersecret"  # Needed for flash messages
 
-# Sample timeline data
-# Types: Academic, Project, Client Project, Work Experience
-TIMELINE = [
-    {
-        "id": 0, 
-        "title": "CS50 - Introduction to Computer Science", 
-        "description": "My first course into computer science, since 2018 when i did computational physical (fortran) during my undergrad as physics major.", 
-        "type": ["Academic"],
-        "date1": "January 2025",
-        "date2": "August 2025"
-    },
-    {
-        "id": 1, 
-        "title": "Portfolio Website", 
-        "description": "My first project (more details in projects). Most projects will not be added to timeline, only significant ones.", 
-        "type": ["Project"],
-        "date1": "August 2025",
-        "date2": "October 2025"
-    },
-    {
-        "id": 2, 
-        "title": "Software Engineer - Intern at Startup", 
-        "description": ".", 
-        "type": ["Work Experience"],
-        "date1": "December 2025",
-        "date2": "February 2026"
-    },
-    {
-        "id": 3, 
-        "title": "Custom Dashboard and Visualization", 
-        "description": "My first client project, about a total of 30 hours of work, for about $600 ($20 /hour).", 
-        "type": ["Client Project"],
-        "date1": "February 2026",
-        "date2": "February 2026"
-    },
-    {
-        "id": 4, 
-        "title": "Mastering Aglorithms and Data Structures in C/C++", 
-        "description": "An extension of the Lite ERP for data analytics and visualization.", 
-        "type": ["Academic"],
-        "date1": "October 2025",
-        "date2": "February 2026"
-    }
-]
+# Configure database (for simplicity, using SQLite here)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///portfolio.db"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize the database
+db.init_app(app)
+
+with app.app_context(): #  Create database tables if they don't exist
+    db.create_all()
+
 # Sample project data
 PROJECTS = [
     {
@@ -89,6 +55,8 @@ PROJECTS = [
         "github_url": "#"
     },
 ]
+
+
 # Context processor to inject current year into all templates
 @app.context_processor
 def inject_current_year():
@@ -100,7 +68,35 @@ def index():
 
 @app.route('/about')
 def about():
-    return render_template('about.html', timeline=TIMELINE)
+    timeline_events = TimelineEvent.query
+
+    # Get filter values from query string
+    category = request.args.get('category')
+    start_date = request.args.get('start_date')  # Format: YYYY-MM
+    end_date = request.args.get('end_date')
+
+
+    # Apply filters
+    if category:
+        timeline_events = timeline_events.filter_by(category=category)
+
+    if start_date:
+        try:
+            start_date_obj = datetime.strptime(start_date, "%Y-%m")
+            timeline_events = timeline_events.filter(TimelineEvent.start_date >= start_date_obj)
+        except ValueError:
+            pass
+
+    if end_date:
+        try:
+            end_date_obj = datetime.strptime(end_date, "%Y-%m")
+            timeline_events = timeline_events.filter(TimelineEvent.end_date <= end_date_obj)
+        except ValueError:
+            pass
+
+    timeline_events = timeline_events.order_by(TimelineEvent.start_date.asc()).all()
+
+    return render_template('about.html', timeline=timeline_events)
 
 @app.route('/projects')
 def projects():

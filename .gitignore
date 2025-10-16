@@ -1,12 +1,22 @@
-# Virtual Environment
+# === Python / Flask ===
 .venv/
-
-# Python caching
 __pycache__/
 *.pyc
-
-# Environment variables
+*.pyo
+*.pyd
+*.db
+instance/
 .env
+.sqlite3
 
-# IDE (VSCode)
+# === macOS ===
+.DS_Store
+**/.DS_Store
+
+# === IDEs / Editors ===
 .vscode/
+.idea/
+
+# === Logs / Temp ===
+*.log
+*.tmp
