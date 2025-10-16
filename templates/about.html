@@ -67,7 +67,7 @@
   <div class="row mb-5 align-items-stretch timeline-item">
     {% if loop.index0 % 2 == 0 %}
     <!-- Text Left -->
-    <div class="col-lg-5 d-flex flex-column justify-content-center text-end pe-lg-3">
+    <div class="col-12 col-lg-5 d-flex flex-column justify-content-center text-end pe-lg-3">
       <div class="card p-3 shadow-sm h-100">
         <h5 class="card-title">{{ event.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">
@@ -95,7 +95,7 @@
     </div>
 
     <!-- Image Right -->
-    <div class="col-lg-5 d-flex flex-column align-items-stretch position-relative text-center text-lg-start ps-lg-3 pe-lg-3">
+    <div class="col-12 col-lg-5 d-flex flex-column align-items-stretch position-relative text-center text-lg-start ps-lg-3 pe-lg-3">
       {% if event.image_path %}
       <div class="position-relative w-100">
         <img src="{{ url_for('static', filename=event.image_path) }}" class="img-fluid rounded shadow-sm" alt="{{ event.title }}"> 
@@ -113,7 +113,7 @@
 
     {% else %}
     <!-- Image Left -->
-    <div class="col-lg-5 d-flex flex-column align-items-stretch position-relative text-center text-lg-start ps-lg-3 pe-lg-3">
+    <div class="col-12 col-lg-5 d-flex flex-column align-items-stretch position-relative text-center text-lg-start ps-lg-3 pe-lg-3">
       {% if event.image_path %}
       <div class="position-relative w-100">
         <img src="{{ url_for('static', filename=event.image_path) }}" class="img-fluid rounded shadow-sm" alt="{{ event.title }}"> 
@@ -130,7 +130,7 @@
     </div>
 
     <!-- Icon Center -->
-    <div class="col-lg-2 d-flex align-items-center justify-content-center">
+    <div class="col-12 col-lg-2 d-flex align-items-center justify-content-center my-3 my-lg-0">
       <div class="timeline-icon bg-white border border-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto">
         {% if event.category == "Academic" %}
           <i class="bi bi-mortarboard"></i>
@@ -147,7 +147,7 @@
     </div>
 
     <!-- Text Right -->
-    <div class="col-lg-5 d-flex flex-column justify-content-center text-start ps-lg-3">
+    <div class="col-12 col-lg-5 d-flex flex-column justify-content-center text-end pe-lg-3">
       <div class="card p-3 shadow-sm h-100">
         <h5 class="card-title">{{ event.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">

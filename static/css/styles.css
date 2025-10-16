@@ -13,8 +13,17 @@
   background-color: var(--bs-primary, #0d6efd);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 0;
+  z-index: -1; /* ensures it stays behind icons */
 }
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+
 
 /* Icon sits above the line */
 .timeline-icon {
@@ -24,12 +33,23 @@
   z-index: 2; /* ensures it floats above the line */
   position: relative;
 }
+.timeline-icon {
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+.timeline-item:hover .timeline-icon {
+  transform: rotate(360deg) scale(1.5);
+  box-shadow: 0 0 15px rgba(0, 74, 173, 0.6), 0 0 30px rgba(0, 74, 173, 0.3);
+  transition: transform 0.8s ease, box-shadow 0.8s ease;
+}
+
 
 /* Make sure the line goes behind icons cleanly */
 .timeline-item {
   position: relative;
   z-index: 1;
 }
+
+
 
 /* Reduce gap between timeline content and center line */
 .timeline-item .col-md-5 {
@@ -38,6 +58,49 @@
 }
 
 
+
+/* Badge Styling */
+.timeline-item .badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+}
+
+
+/* Image Styling */
+.timeline-item img {
+  width: 100%;
+  height: auto;
+  max-height: 300px; /* adjust as needed */
+  object-fit: cover;
+}
+
+@media (max-width: 992px) {
+  .timeline-line {
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1; /* ensures it stays behind icons */
+  }
+}
+@media (max-width: 768px) {
+  .timeline-item .card {
+    text-align: center !important;
+    margin-bottom: 1.5rem;
+  }
+  .timeline-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  .timeline-item .col-lg-5.text-end {
+    text-align: center !important;
+  }
+  .timeline-item .col-lg-5.text-start {
+    text-align: center !important;
+  }
+  .timeline-item .card {
+    margin-bottom: 2rem;
+  }
+}
 
 
 
