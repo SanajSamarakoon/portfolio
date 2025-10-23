@@ -2,9 +2,9 @@
 import json
 from flask_sqlalchemy import SQLAlchemy
 
-
 db = SQLAlchemy()
 
+# Timeline Event Model
 class TimelineEvent(db.Model):
     __tablename__ = 'timeline_events'
 
@@ -23,6 +23,32 @@ class TimelineEvent(db.Model):
     @property
     def is_ongoing(self):
         return self.end_date is None
+    
+    @property
+    def tech_stack(self):
+        if self.tech_stack_json:
+            return json.loads(self.tech_stack_json)
+        return []
+    
+    @tech_stack.setter
+    def tech_stack(self, value):
+        self.tech_stack_json = json.dumps(value)
+
+# Projects Model
+class Project(db.Model):
+    __tablename__ = 'projects'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(250))
+    tech_stack_json = db.Column(db.Text) # JSON encoded list of technologies used
+    demo_url = db.Column(db.String(250), default="#")
+    github_url = db.Column(db.String(250), default="#")
+    timeline_event_id = db.Column(db.Integer, db.ForeignKey('timeline_events.id'))
+
+    def __repr__(self):
+        return f"<Project {self.title}>"
     
     @property
     def tech_stack(self):

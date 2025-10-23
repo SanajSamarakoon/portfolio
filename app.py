@@ -1,7 +1,7 @@
 # Main Application File
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
-from models import db, TimelineEvent
+from models import db, TimelineEvent, Project
 
 app = Flask(__name__)
 app.secret_key = "supersecret"  # Needed for flash messages
@@ -16,47 +16,6 @@ db.init_app(app)
 with app.app_context(): #  Create database tables if they don't exist
     db.create_all()
 
-# Sample project data
-PROJECTS = [
-    {
-        "id": 0, 
-        "title": "Portfolio Website", 
-        "description": "My first project.", 
-        "image": "project0.png",
-        "tech_stack": ["C++"],
-        "demo_url": "#",
-        "github_url": "#"
-    },
-    {
-        "id": 1, 
-        "title": "2D Super Mario Game", 
-        "description": "A tribute to my first interaction with a computer in 2005 (Grade 4).", 
-        "image": "project1.png",
-        "tech_stack": ["C++"],
-        "demo_url": "#",
-        "github_url": "#"
-    },
-    {
-        "id": 2, 
-        "title": "Lite ERP", 
-        "description": "Basic ERP inventory management, manufacturing and batch tracibility.", 
-        "image": "project2.png",
-        "tech_stack": ["Java (SpringBoot)", "PostgreSQL" ,"React"],
-        "demo_url": "#",
-        "github_url": "#"
-    },
-    {
-        "id": 3, 
-        "title": "Lite ERP Dashboard", 
-        "description": "An extension of the Lite ERP for data analytics and visualization.", 
-        "image": "project3.png",
-        "tech_stack": ["Java (SpringBoot)", "PostgreSQL" ,"React"],
-        "demo_url": "#",
-        "github_url": "#"
-    },
-]
-
-
 # Context processor to inject current year into all templates
 @app.context_processor
 def inject_current_year():
@@ -64,7 +23,8 @@ def inject_current_year():
 
 @app.route('/')
 def index():
-    return render_template('index.html', projects=PROJECTS)
+    projects = Project.query.limit(3).all() # Show only 3 projects on the homepage
+    return render_template('index.html', projects=projects)
 
 @app.route('/about')
 def about():
@@ -100,14 +60,12 @@ def about():
 
 @app.route('/projects')
 def projects():
-    return render_template('projects.html', projects=PROJECTS)
+    projects = Project.query.all()
+    return render_template('projects.html', projects=projects)
 
 @app.route('/projects/<int:project_id>')
 def project_detail(project_id):
-    project = next((p for p in PROJECTS if p['id'] == project_id), None)
-    if not project:
-        flash("Project not found.")
-        return redirect(url_for('projects'))
+    project = Project.query.get_or_404(project_id)
     return render_template('project_detail.html', project=project)
 
 @app.route('/contact', methods=['GET', 'POST'])
