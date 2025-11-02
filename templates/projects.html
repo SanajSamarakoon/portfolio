@@ -1,49 +1,128 @@
 {% extends "base.html" %}
 {% block title %}Projects - My Portfolio{% endblock %}
 
+{% block extra_css %}
+<style>
+    .project-card {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .project-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 74, 173, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-overlay {
+        opacity: 1;
+    }
+
+    .tech-stack .badge {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tech-stack .badge:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .tech-filter-badge {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tech-filter-badge:hover {
+        transform: scale(1.1);
+    }
+
+    .no-projects-message {
+        display: none;
+        text-align: center;
+        padding: 3rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h1 class="mb-4"> My Projects</h1>
+<h1 class="mb-4">My Projects</h1>
 
 <section id="projects-intro" class="mb-5">
   <div class="container">
     <p>
-        Welcome to my projects showcase, a collection of ideas turned into solutions with code. This isn’t just a portfolio of random projects — 
-        it’s a glimpse into how I learn, experiment, and transform curiosity-driven concepts into something interactive.
+        Welcome to my projects showcase, a collection of ideas turned into solutions with code. This isn't just a portfolio of random projects — 
+        it's a glimpse into how I learn, experiment, and transform curiosity-driven concepts into something interactive.
     </p>
     <p>
         Each project here tells a story: some are small experiments, others full-fledged applications, 
         but all are stepping stones on my path to becoming a versatile software engineer.
     </p>
-    <p>
-        I started this journey armed with curiosity, determination, and a drive to create. While some projects were simple trials, like building small games, 
-        most were built to solve real problems — in business, personal projects, or data analysis. Each one reflects a challenge I wanted to tackle 
-        or a skill I wanted to master.
-    </p>
-    <p>
-        Think of this as a <em>window into my coding journey</em> — where ideas meet execution, mistakes become lessons, 
-        and every line of code contributes to a bigger adventure.
-    </p>
+
+    <!-- Tech Stack Filter -->
+    <div class="mb-4">
+        <h5>Filter by Technology:</h5>
+        <div class="tech-filter mb-3">
+            {% set all_tech = [] %}
+            {% for project in projects %}
+                {% for tech in project.tech_stack %}
+                    {% if tech not in all_tech %}
+                        {% set _ = all_tech.append(tech) %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            
+            <span class="badge bg-primary me-2 mb-2 tech-filter-badge" data-tech="all">
+                All Technologies
+            </span>
+            {% for tech in all_tech|sort %}
+                <span class="badge bg-secondary me-2 mb-2 tech-filter-badge" data-tech="{{ tech }}">
+                    {{ tech }}
+                </span>
+            {% endfor %}
+        </div>
+    </div>
   </div>
 </section>
 
 <section id="projects" class="container mt-5">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="no-projects-message alert alert-info" id="noProjectsMessage">
+        <h5>No projects found</h5>
+        <p>Try selecting a different technology filter.</p>
+        <button class="btn btn-sm btn-outline-primary" onclick="clearFilter()">Show All Projects</button>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="projectsGrid">
         {% for project in projects %}
-        <div class="col">
+        <div class="col project-item" data-tech="{{ project.tech_stack|join(' ') }}">
             <div class="card h-100 project-card shadow-sm">
-                <img src="{{ url_for('static', filename='images/' + project.image) }}" class="card-img-top" alt="{{ project.title }}">
-                <div class="project-overlay">
+                <div style="position: relative;">
+                    <img src="{{ url_for('static', filename='images/' + project.image) }}" class="card-img-top" alt="{{ project.title }}">
+                    <div class="project-overlay">
                         <div class="project-links">
+                            {% if project.demo_url and project.demo_url != "#" %}
                             <a href="{{ project.demo_url }}" class="btn btn-primary btn-sm me-2" target="_blank">View Demo</a>
+                            {% endif %}
+                            {% if project.github_url and project.github_url != "#" %}
                             <a href="{{ project.github_url }}" class="btn btn-outline-light btn-sm" target="_blank">GitHub</a>
+                            {% endif %}
                         </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ project.title }}</h5>
                     <p class="card-text">{{ project.description }}</p>
                     <div class="tech-stack">
-                        {% for tech_stack in project.tech_stack %}
-                        <span class="badge bg-primary">{{ tech_stack }}</span>
+                        {% for tech in project.tech_stack %}
+                        <span class="badge bg-primary me-1 mb-1" onclick="filterByTech('{{ tech }}')">{{ tech }}</span>
                         {% endfor %}
                     </div>
                 </div>
@@ -57,5 +136,59 @@
 </section>
 
 <br>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+// Tech stack filtering functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click handlers to filter badges
+    const filterBadges = document.querySelectorAll('.tech-filter-badge');
+    filterBadges.forEach(badge => {
+        badge.addEventListener('click', function() {
+            const tech = this.dataset.tech;
+            filterByTech(tech);
+            
+            // Update active state
+            filterBadges.forEach(b => b.classList.remove('bg-primary', 'text-white'));
+            this.classList.add('bg-primary', 'text-white');
+        });
+    });
+});
+
+function filterByTech(technology) {
+    const projectItems = document.querySelectorAll('.project-item');
+    const noProjectsMessage = document.getElementById('noProjectsMessage');
+    let visibleCount = 0;
+
+    projectItems.forEach(item => {
+        if (technology === 'all' || item.dataset.tech.includes(technology)) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+
+    // Show/hide no projects message
+    if (visibleCount === 0) {
+        noProjectsMessage.style.display = 'block';
+    } else {
+        noProjectsMessage.style.display = 'none';
+    }
+}
+
+function clearFilter() {
+    filterByTech('all');
+    
+    // Reset all badges to default state
+    const filterBadges = document.querySelectorAll('.tech-filter-badge');
+    filterBadges.forEach(badge => {
+        badge.classList.remove('bg-primary', 'text-white');
+    });
+    
+    // Set "All Technologies" as active
+    document.querySelector('[data-tech="all"]').classList.add('bg-primary', 'text-white');
+}
+</script>
 {% endblock %}

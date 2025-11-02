@@ -180,23 +180,5 @@
   {% endfor %}
 </div>
 
-<!-- ===== DEBUG SECTION - TEMPORARY ===== -->
-<div class="container mt-5 p-3 bg-light border rounded">
-  <h4>Debug Information:</h4>
-  <div class="row">
-    {% for event in timeline %}
-    <div class="col-md-6 mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h6 class="card-title">{{ event.title }}</h6>
-          <p class="mb-1"><strong>Event ID:</strong> {{ event.id }}</p>
-          <p class="mb-1"><strong>Has Project:</strong> {{ event.project is not none }}</p>
-          <p class="mb-1"><strong>Project Title:</strong> {% if event.project %}{{ event.project.title }}{% else %}None{% endif %}</p>
-          <p class="mb-0"><strong>Project ID:</strong> {% if event.project %}{{ event.project.id }}{% else %}None{% endif %}</p>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
 {% endblock %}
+

@@ -1,4 +1,4 @@
-# Models to handle the Database Data Entry and Retrieval
+# models.py - FIXED RELATIONSHIP
 import json
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,11 +11,11 @@ class TimelineEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    category = db.Column(db.String(50), nullable=False) # Academic, Project, Work Experience, Client Project (Freelance)
+    category = db.Column(db.String(50), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False) # Can be "Ongoing/In Progress"
+    end_date = db.Column(db.Date, nullable=False)
     image_path = db.Column(db.String(250))
-    tech_stack_json = db.Column(db.Text) # JSON encoded list of technologies used
+    tech_stack_json = db.Column(db.Text)
 
     def __repr__(self):
         return f"<TimelineEvent {self.title} - {self.category}>"
@@ -34,7 +34,7 @@ class TimelineEvent(db.Model):
     def tech_stack(self, value):
         self.tech_stack_json = json.dumps(value)
 
-# Projects Model
+# Projects Model - FIXED RELATIONSHIP
 class Project(db.Model):
     __tablename__ = 'projects'
 
@@ -42,13 +42,14 @@ class Project(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     image = db.Column(db.String(250))
-    tech_stack_json = db.Column(db.Text) # JSON encoded list of technologies used
+    tech_stack_json = db.Column(db.Text)
     demo_url = db.Column(db.String(250), default="#")
     github_url = db.Column(db.String(250), default="#")
     timeline_event_id = db.Column(db.Integer, db.ForeignKey('timeline_events.id'))
 
-    # Relationship to TimelineEvent
-    timeline_event = db.relationship('TimelineEvent', backref=db.backref('projects', uselist=False))
+    # FIXED: Changed backref to 'project' (singular) to match your template
+    timeline_event = db.relationship('TimelineEvent', backref=db.backref('project', uselist=False))
+
     def __repr__(self):
         return f"<Project {self.title}>"
     

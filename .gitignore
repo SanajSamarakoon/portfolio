@@ -8,6 +8,7 @@ __pycache__/
 instance/
 .env
 .sqlite3
+test1.py
 
 # === macOS ===
 .DS_Store
@@ -20,3 +21,4 @@ instance/
 # === Logs / Temp ===
 *.log
 *.tmp
+
