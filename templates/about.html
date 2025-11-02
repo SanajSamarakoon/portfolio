@@ -74,7 +74,17 @@
           {{ event.start_date.strftime('%B %Y') }} — {{ event.end_date.strftime('%B %Y') }}
         </h6>
         <p class="card-text">{{ event.description }}</p>
+        <!-- Project Link Button -->
+        {% if event.project %}
+        <div class="mt-3">
+          <a href="{{ url_for('project_detail', project_id=event.project.id) }}" 
+            class="btn btn-sm btn-outline-primary">
+            View Project Details
+          </a>
+        </div>
+        {% endif %}
       </div>
+      
     </div>
 
     <!-- Icon Center -->
@@ -99,7 +109,7 @@
       {% if event.image_path %}
       <div class="position-relative w-100">
         <img src="{{ url_for('static', filename=event.image_path) }}" class="img-fluid rounded shadow-sm" alt="{{ event.title }}"> 
-      
+        
         {% if event.tech_stack %}
         <div class="position-absolute bottom-0 start-0 mb-2 ms-2 d-flex flex-wrap">
           {% for tech in event.tech_stack %}
@@ -154,10 +164,39 @@
           {{ event.start_date.strftime('%B %Y') }} — {{ event.end_date.strftime('%B %Y') }}
         </h6>
         <p class="card-text">{{ event.description }}</p>
+        <!-- Project Link Button -->
+        {% if event.project %}
+        <div class="mt-3">
+          <a href="{{ url_for('project_detail', project_id=event.project.id) }}" 
+            class="btn btn-sm btn-outline-primary">
+            View Project Details
+          </a>
+        </div>
+        {% endif %}
       </div>
     </div>
     {% endif %}
   </div>
   {% endfor %}
+</div>
+
+<!-- ===== DEBUG SECTION - TEMPORARY ===== -->
+<div class="container mt-5 p-3 bg-light border rounded">
+  <h4>Debug Information:</h4>
+  <div class="row">
+    {% for event in timeline %}
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title">{{ event.title }}</h6>
+          <p class="mb-1"><strong>Event ID:</strong> {{ event.id }}</p>
+          <p class="mb-1"><strong>Has Project:</strong> {{ event.project is not none }}</p>
+          <p class="mb-1"><strong>Project Title:</strong> {% if event.project %}{{ event.project.title }}{% else %}None{% endif %}</p>
+          <p class="mb-0"><strong>Project ID:</strong> {% if event.project %}{{ event.project.id }}{% else %}None{% endif %}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

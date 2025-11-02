@@ -17,7 +17,8 @@ with app.app_context():
             image="project0.png",
             tech_stack=["Python", "Flask", "HTML", "CSS", "JavaScript", "Bootstrap"],
             demo_url="#",
-            github_url="#"
+            github_url="#",
+            timeline_event_id=2
         ),
         Project(
             title="2D Super Mario Game",
@@ -25,7 +26,8 @@ with app.app_context():
             image="project1.png",
             tech_stack=["C++", "SFML", "Game Development"],
             demo_url="#",
-            github_url="#"
+            github_url="#",
+            timeline_event_id=6
         ),
         Project(
             title="Lite ERP",
@@ -33,7 +35,8 @@ with app.app_context():
             image="project2.png",
             tech_stack=["Java", "SpringBoot", "PostgreSQL", "React", "REST API"],
             demo_url="#",
-            github_url="#"
+            github_url="#",
+            timeline_event_id=7
         ),
         Project(
             title="Lite ERP Dashboard",
@@ -41,7 +44,8 @@ with app.app_context():
             image="project3.png",
             tech_stack=["Java", "SpringBoot", "PostgreSQL", "React", "Chart.js"],
             demo_url="#",
-            github_url="#"
+            github_url="#",
+            timeline_event_id=8
         ),
     ]
 

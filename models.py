@@ -47,6 +47,8 @@ class Project(db.Model):
     github_url = db.Column(db.String(250), default="#")
     timeline_event_id = db.Column(db.Integer, db.ForeignKey('timeline_events.id'))
 
+    # Relationship to TimelineEvent
+    timeline_event = db.relationship('TimelineEvent', backref=db.backref('projects', uselist=False))
     def __repr__(self):
         return f"<Project {self.title}>"
     
