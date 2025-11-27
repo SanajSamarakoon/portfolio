@@ -1,10 +1,13 @@
 # models.py - FIXED RELATIONSHIP
 import json
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
+# ======================
 # Timeline Event Model
+# ======================
 class TimelineEvent(db.Model):
     __tablename__ = 'timeline_events'
 
@@ -34,7 +37,10 @@ class TimelineEvent(db.Model):
     def tech_stack(self, value):
         self.tech_stack_json = json.dumps(value)
 
-# Projects Model - FIXED RELATIONSHIP
+# ================
+# Projects Model
+# ================
+
 class Project(db.Model):
     __tablename__ = 'projects'
 
@@ -62,3 +68,41 @@ class Project(db.Model):
     @tech_stack.setter
     def tech_stack(self, value):
         self.tech_stack_json = json.dumps(value)
+
+# ======================
+# Contact Message Model
+# ======================
+class ContactMessage(db.Model):
+    __tablename__ = 'contact_messages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    submitted_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<ContactMessage from {self.name} - {self.email}>"
+    
+    @staticmethod
+    def save_message(name, email, message):
+        new_message = ContactMessage(name=name, email=email, message=message)
+        db.session.add(new_message)
+        db.session.commit()
+
+        # Delete old entries if more than 80 messages exist
+        total_messages = ContactMessage.query.count()
+        if total_messages > 80:
+            extra = total_messages - 80
+            old_entries = (ContactMessage.query
+                            .order_by(ContactMessage.submitted_at.asc())
+                            .limit(extra)
+                            .all())
+            for entry in old_entries:
+                db.session.delete(entry)
+            db.session.commit()
+    
+    @staticmethod
+    def get_latest(limit=80):
+        """Return the latest 'limit' messages."""
+        return ContactMessage.query.order_by(ContactMessage.id.desc()).limit(limit).all()

@@ -1,7 +1,7 @@
 # Main Application File
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
-from models import db, TimelineEvent, Project
+from models import db, TimelineEvent, Project, ContactMessage
 
 app = Flask(__name__)
 app.secret_key = "supersecret"  # Needed for flash messages
@@ -75,12 +75,14 @@ def contact():
         email = request.form.get('email')
         message = request.form.get('message')
 
-        # For now, just print (later can send email and store in DB)
-        print("Contact Form Submission:")
-        print(f"New Message from {name} ({email}): {message}")
-        flash("Thanks for reaching out! Your message has been received.")
-        return redirect(url_for('index'))
-    
+        # Save to DB using the model's static method
+        if name and email and message:
+            ContactMessage.save_message(name, email, message)
+            flash("Thanks for reaching out! Your message has been received.")
+            return redirect(url_for('index'))
+        else:
+            flash("Please fill out all fields before submitting.")
+    # GET
     return render_template('contact.html') # If GET request, just render the form
 
 if __name__ == '__main__':
