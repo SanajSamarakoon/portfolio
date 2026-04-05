@@ -85,7 +85,7 @@ with app.app_context():
     ]
 
     # Add events to the session and commit to the database
-    db.session.bulk_save_objects(events)
+    db.session.add_all(events)
     db.session.commit()
 
     print("Database seeded with initial timeline events.")

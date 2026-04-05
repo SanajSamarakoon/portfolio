@@ -10,13 +10,12 @@ db = SQLAlchemy()
 # ======================
 class TimelineEvent(db.Model):
     __tablename__ = 'timeline_events'
-
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(50), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=True)
     image_path = db.Column(db.String(250))
     tech_stack_json = db.Column(db.Text)
 

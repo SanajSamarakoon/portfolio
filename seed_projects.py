@@ -50,7 +50,7 @@ with app.app_context():
     ]
 
     # Add projects to the session and commit to the database
-    db.session.bulk_save_objects(projects)
+    db.session.add_all(projects)
     db.session.commit()
 
     print("Database seeded with initial projects.")

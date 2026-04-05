@@ -2,9 +2,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
 from models import db, TimelineEvent, Project, ContactMessage
+import os
 
 app = Flask(__name__)
-app.secret_key = "supersecret"  # Needed for flash messages
+app.secret_key = os.environ.get("SECRET_KEY", "dev-key")
 
 # Configure database (for simplicity, using SQLite here)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///portfolio.db"
@@ -23,7 +24,7 @@ def inject_current_year():
 
 @app.route('/')
 def index():
-    projects = Project.query.limit(3).all() # Show only 3 projects on the homepage
+    projects = Project.query.order_by(Project.id.desc()).limit(3).all() # Show only 3 projects on the homepage
     return render_template('index.html', projects=projects)
 
 @app.route('/about')
@@ -79,7 +80,7 @@ def contact():
         if name and email and message:
             ContactMessage.save_message(name, email, message)
             flash("Thanks for reaching out! Your message has been received.")
-            return redirect(url_for('index'))
+            return redirect(url_for('contact'))
         else:
             flash("Please fill out all fields before submitting.")
     # GET
