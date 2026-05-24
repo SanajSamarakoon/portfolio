@@ -26,7 +26,7 @@ function initializeProjectInteractions() {
     timelineProjectLinks.forEach(link => {
         link.addEventListener('mouseenter', function() {
             const timelineItem = this.closest('.timeline-item');
-            timelineItem.style.transform = 'scale(1.02)';
+            timelineItem.style.transform = 'scale(1.10)';
         });
         
         link.addEventListener('mouseleave', function() {

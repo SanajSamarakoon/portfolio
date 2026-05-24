@@ -1,3 +1,10 @@
+/* This is styles.css*/
+.navbar-brand .bi-gem {
+  color: #0ce16f;
+  font-size: 2rem;
+}
+
+
 :root {
   --blue: #004aad; /* deep blue */
   --green: #28a745; /* vibrant green */
@@ -13,7 +20,7 @@
   background-color: var(--bs-primary, #0d6efd);
   left: 50%;
   transform: translateX(-50%);
-  z-index: -1; /* ensures it stays behind icons */
+  z-index: 1; /* ensures it stays behind icons */
 }
 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -33,15 +40,17 @@
   z-index: 2; /* ensures it floats above the line */
   position: relative;
 }
+@media (min-width:992px){
+  .timeline-icon {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 .timeline-icon {
   transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
-.timeline-item:hover .timeline-icon {
-  transform: rotate(360deg) scale(1.5);
-  box-shadow: 0 0 15px rgba(0, 74, 173, 0.6), 0 0 30px rgba(0, 74, 173, 0.3);
-  transition: transform 0.8s ease, box-shadow 0.8s ease;
-}
-
 
 /* Make sure the line goes behind icons cleanly */
 .timeline-item {
@@ -49,13 +58,6 @@
   z-index: 1;
 }
 
-
-
-/* Reduce gap between timeline content and center line */
-.timeline-item .col-md-5 {
-  padding-left: 0.1rem !important;
-  padding-right: 0.1rem !important;
-}
 
 
 
@@ -78,7 +80,7 @@
   .timeline-line {
     left: 50%;
     transform: translateX(-50%);
-    z-index: -1; /* ensures it stays behind icons */
+    z-index: 0; /* ensures it stays behind icons */
   }
 }
 @media (max-width: 768px) {
@@ -309,7 +311,7 @@ html {
 
 /* Enhanced timeline animations */
 .timeline-item {
-    opacity: 0;
+    opacity: 1;
     transform: translateY(30px);
     transition: all 0.6s ease;
 }
@@ -318,3 +320,4 @@ html {
     opacity: 1;
     transform: translateY(0);
 }
+

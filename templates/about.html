@@ -1,30 +1,28 @@
 {% extends "base.html" %}
-
+{% block title %}About — Sanaj{% endblock %}
 {% block content %}
-<h1 class="text-center mb-5">My Journey</h1>
+<div class="container mt-5">
+    <h1> My Journey</h1>
+    <br>
+</div>
 
 <section id="about-intro" class="mb-5">
   <div class="container">
     <p>
-      Welcome to the heart of my journey. This isn’t the usual “here’s my career in bullet points” page — 
-      if you want the formal stuff, my 
-      <a href="{{ url_for('static', filename='docs/Curriculum_vitae_V4_(12.08.2025).pdf')}}" download>CV</a> 
-      and <a href="{{ url_for('static', filename='docs/Resume_V2_(12.08.2025).pdf')}}" download>resume</a> 
-      are just a click away.
+      Welcome to the heart of my journey.
     </p>
-
-    <p>Here, you’ll find an interactive timeline that tells the story of my path as a software engineer.</p>
-
     <p>
-      I started as a <strong>Physics major</strong>, became an <strong>entrepreneur out of necessity</strong> in our family business, 
-      and now I’m charting a course into <strong>uncharted waters: software engineering</strong>.
-    </p>
-
-    <p>
-      I don’t come from a traditional Computer Science background. Think of this timeline as a 
-      <em>map of an unscripted adventure</em> — a few detours, some steep climbs, but plenty of action, 
+      I don’t come from a traditional Computer Science background. Here, you’ll find an interactive timeline 
+      that shows the <em>map of an unscripted adventure</em> — a few detours, some steep climbs, but plenty of action, 
       problem-solving, and moments of discovery along the way.
     </p>
+    
+    <p>
+      I started as a <strong>Physics major</strong>, became an <strong>entrepreneur out of necessity</strong> in our family business, 
+      and now I’m charting a course into <strong>uncharted waters</strong>. The sea is dangerous and its storms terrible, 
+      but these obstacles have never been sufficient reason to remain ashore... 
+    </p>
+    
   </div>
 </section>
 
@@ -59,15 +57,18 @@
   </form>
 </div>
 
-<!-- ===== Timeline Section ===== -->
-<div class="container position-relative">
-  <div class="timeline-line position-absolute top-0 start-50 translate-middle-x h-100"></div>
+<div class="position-relative">
+  <!-- Vertical Line -->
+  <div class="timeline-line position-absolute top-0 bottom-0"></div>
 
+<!-- ===== Timeline Section ===== -->
   {% for event in timeline %}
   <div class="row mb-5 align-items-stretch timeline-item">
+
+    <!-- TEXT left | IMAGE right -->
     {% if loop.index0 % 2 == 0 %}
     <!-- Text Left -->
-    <div class="col-12 col-lg-5 d-flex flex-column justify-content-center text-end pe-lg-3">
+    <div class="col-12 col-lg-5 d-flex flex-column justify-content-center text-end pe-lg-3 order-2 order-lg-1">
       <div class="card p-3 shadow-sm h-100">
         <h5 class="card-title">{{ event.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">
@@ -84,12 +85,11 @@
         </div>
         {% endif %}
       </div>
-      
     </div>
 
     <!-- Icon Center -->
-    <div class="col-lg-2 d-flex align-items-center justify-content-center">
-      <div class="timeline-icon bg-white border border-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto">
+      <div class="col-12 col-lg-2 d-none d-lg-flex align-items-center justify-content-center position-relative order-lg-2">      
+        <div class="timeline-icon bg-white border border-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto">
         {% if event.category == "Academic" %}
           <i class="bi bi-mortarboard"></i>
         {% elif event.category == "Project" %}
@@ -105,7 +105,7 @@
     </div>
 
     <!-- Image Right -->
-    <div class="col-12 col-lg-5 d-flex flex-column align-items-stretch position-relative text-center text-lg-start ps-lg-3 pe-lg-3">
+    <div class="col-12 col-lg-5 d-flex flex-column align-items-stretch text-center text-lg-start ps-lg-3 pe-lg-3 order-1 order-lg-3">
       {% if event.image_path %}
       <div class="position-relative w-100">
         <img src="{{ url_for('static', filename=event.image_path) }}" class="img-fluid rounded shadow-sm" alt="{{ event.title }}"> 
@@ -121,9 +121,10 @@
       {% endif %}
     </div>
 
+    <!-- IMAGE left | TEST right -->
     {% else %}
     <!-- Image Left -->
-    <div class="col-12 col-lg-5 d-flex flex-column align-items-stretch position-relative text-center text-lg-start ps-lg-3 pe-lg-3">
+    <div class="col-12 col-lg-5 d-flex flex-column align-items-stretch text-center text-lg-start ps-lg-3 pe-lg-3 order-1 order-lg-1">
       {% if event.image_path %}
       <div class="position-relative w-100">
         <img src="{{ url_for('static', filename=event.image_path) }}" class="img-fluid rounded shadow-sm" alt="{{ event.title }}"> 
@@ -140,7 +141,7 @@
     </div>
 
     <!-- Icon Center -->
-    <div class="col-12 col-lg-2 d-flex align-items-center justify-content-center my-3 my-lg-0">
+    <div class="col-12 col-lg-2 d-none d-lg-flex align-items-center justify-content-center position-relative order-lg-2">
       <div class="timeline-icon bg-white border border-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto">
         {% if event.category == "Academic" %}
           <i class="bi bi-mortarboard"></i>
@@ -157,7 +158,7 @@
     </div>
 
     <!-- Text Right -->
-    <div class="col-12 col-lg-5 d-flex flex-column justify-content-center text-end pe-lg-3">
+    <div class="col-12 col-lg-5 d-flex flex-column justify-content-center text-end pe-lg-3 order-3 order-lg-3">
       <div class="card p-3 shadow-sm h-100">
         <h5 class="card-title">{{ event.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">
@@ -179,6 +180,7 @@
   </div>
   {% endfor %}
 </div>
+
 
 {% endblock %}
 

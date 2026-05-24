@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
 from models import db, TimelineEvent, Project, ContactMessage
+from sqlalchemy.sql.expression import func
 import os
 
 app = Flask(__name__)
@@ -24,7 +25,7 @@ def inject_current_year():
 
 @app.route('/')
 def index():
-    projects = Project.query.order_by(Project.id.desc()).limit(3).all() # Show only 3 projects on the homepage
+    projects = Project.query.order_by(func.random()).limit(3).all() # Show only 3 projects on the homepage
     return render_template('index.html', projects=projects)
 
 @app.route('/about')

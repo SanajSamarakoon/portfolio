@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Contact - My Portfolio{% endblock %}
+{% block title %}Contact - Sanaj{% endblock %}
 
 {% block content %}
-
+<div class="container mt-5">
+    <h1>Welcome to Contact Me</h1>
+    <br>
+</div>
 <!-- DOWNLOAD BUTTONS -->
  <br>
  <div class="row g-3 mb-4">
     <div class="col-md-6">
-        <a href="{{ url_for('static', filename='docs/Resume_V2_(12.08.2025).pdf') }}" download
+        <a href="{{ url_for('static', filename='docs/Resume.pdf') }}" download
            class="text-decoration-none">
             <div class="p-3 text-white rounded shadow-sm"
                  style="background: linear-gradient(135deg, #0d6efd, #0056d2);">
@@ -17,20 +20,12 @@
         </a>
     </div>
 
-    <div class="col-md-6">
-        <a href="{{ url_for('static', filename='docs/Curriculum_vitae_V4_(12.08.2025).pdf') }}" download
-           class="text-decoration-none">
-            <div class="p-3 border border-primary rounded shadow-sm bg-white text-primary">
-                <h5 class="m-0">📑 Download CV</h5>
-            </div>
-        </a>
-    </div>
-</div>
+
 
 
 <!-- Contact Form -->
  <section id="contact">
-    <h2>Contact Me</h2>
+    <h2>Write your message here.</h2>
     <form id="contact-form" method="post" action="{{ url_for('contact') }}">
         <!-- NAME -->
         <div class="mb-3">

@@ -1,6 +1,6 @@
 <!-- templates/project_detail.html - Enhanced version -->
 {% extends "base.html" %}
-{% block title %}{{ project.title }} - My Portfolio{% endblock %}
+{% block title %}{{ project.title }} - Sanaj{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -84,8 +84,7 @@
         <div class="col-lg-6 mb-4">
             <img src="{{ url_for('static', filename='images/' + project.image) }}" 
                  class="img-fluid project-image" 
-                 alt="{{ project.title }}"
-                 onerror="this.src='{{ url_for('static', filename='images/placeholder.jpg')}}'">
+                 alt="{{ project.title }}">
         </div>
         
         <!-- Project Description -->
@@ -128,7 +127,7 @@
 <section class="container py-4">
     <div class="d-flex justify-content-between">
         <a href="{{ url_for('projects') }}" class="btn btn-outline-primary">
-            <i class="bi bi-arrow-left me-2"></i>Back to All Projects
+            <i class="bi bi-arrow-left me-2"></i>View My Projects
         </a>
         <a href="{{ url_for('about') }}" class="btn btn-outline-secondary">
             View My Journey<i class="bi bi-arrow-right ms-2"></i>
